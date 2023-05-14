@@ -20,11 +20,15 @@ type Server struct {
 func New(cfg *Config, log *zap.Logger) *Server {
 	server := &Server{config: cfg, logger: log}
 
+	server.metrics = newMetrics()
+
 	server.app = fiber.New(fiber.Config{JSONEncoder: json.Marshal, JSONDecoder: json.Unmarshal})
 
 	server.app.Get("/metrics", adaptor.HTTPHandler(promhttp.Handler()))
 	server.app.Get("/healthz/liveness", server.liveness)
 	server.app.Get("/healthz/readiness", server.readiness)
+
+	server.app.Get("/ok", server.ok)
 
 	// v1 := server.app.Group("api/v1")
 

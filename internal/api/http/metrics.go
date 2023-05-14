@@ -6,7 +6,7 @@ type Metrics interface {
 	IncrementTotalRequests(endpoint string)
 }
 
-func NewMetrics() Metrics {
+func newMetrics() Metrics {
 	totalRequests := prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "total_requests",
 		Help: "This is counter for total requests from clients",

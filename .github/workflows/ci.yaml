@@ -19,6 +19,8 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     needs:
       - test
     steps:
