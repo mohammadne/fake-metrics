@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 
+	"github.com/MohammadNE/fake-metrics/internal/api/http"
 	"github.com/MohammadNE/fake-metrics/internal/config"
 	"github.com/MohammadNE/fake-metrics/pkg/logger"
 	"github.com/spf13/cobra"
@@ -24,7 +25,10 @@ func (cmd Server) Command(trap chan os.Signal) *cobra.Command {
 }
 
 func (cmd *Server) main(cfg *config.Config, trap chan os.Signal) {
-	logger := logger.NewZap(cfg.Logger)
+	logger := logger.New(cfg.Logger)
+
+	server := http.New(cfg.HTTP, logger)
+	go server.Serve()
 
 	// Keep this at the bottom of the main function
 	field := zap.String("signal trap", (<-trap).String())

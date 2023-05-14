@@ -7,14 +7,17 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func NewZap(cfg *Config) *zap.Logger {
-	return zap.New(
-		zapcore.NewCore(getEncoder(cfg), getWriteSyncer(cfg), getLoggerLevel(cfg)),
-		getOptions(cfg)...,
+func New(cfg *Config) *zap.Logger {
+	core := zapcore.NewCore(
+		prepEncoder(cfg),
+		zapcore.Lock(zapcore.AddSync(os.Stderr)),
+		prepLevel(cfg),
 	)
+
+	return zap.New(zapcore.NewTee(core), getOptions(cfg)...)
 }
 
-func getEncoder(cfg *Config) zapcore.Encoder {
+func prepEncoder(cfg *Config) zapcore.Encoder {
 	var encoderConfig zapcore.EncoderConfig
 	if cfg.Development {
 		encoderConfig = zap.NewDevelopmentEncoderConfig()
@@ -36,11 +39,7 @@ func getEncoder(cfg *Config) zapcore.Encoder {
 	return encoder
 }
 
-func getWriteSyncer(cfg *Config) zapcore.WriteSyncer {
-	return zapcore.Lock(os.Stdout)
-}
-
-func getLoggerLevel(cfg *Config) zap.AtomicLevel {
+func prepLevel(cfg *Config) zap.AtomicLevel {
 	var level zapcore.Level
 
 	if err := level.Set(cfg.Level); err != nil {

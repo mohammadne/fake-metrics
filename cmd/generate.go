@@ -25,7 +25,7 @@ func (m Generate) Command(trap chan os.Signal) *cobra.Command {
 }
 
 func (m *Generate) main(cfg *config.Config, args []string, trap chan os.Signal) {
-	logger := logger.NewZap(cfg.Logger)
+	logger := logger.New(cfg.Logger)
 	_ = logger
 
 	// if len(args) != 1 {
