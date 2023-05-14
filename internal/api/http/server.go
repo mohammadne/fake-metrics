@@ -30,6 +30,7 @@ func New(cfg *Config, log *zap.Logger, tracer trace.Tracer) *Server {
 	server.app.Get("/healthz/readiness", server.readiness)
 
 	server.app.Get("/ok", server.simulateOK)
+	server.app.Get("/slow-ok", server.simulateSlowOK)
 	server.app.Get("/error", server.simulateError)
 	server.app.Get("/random", server.random)
 

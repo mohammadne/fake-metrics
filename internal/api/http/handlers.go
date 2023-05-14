@@ -28,6 +28,16 @@ func (handler *Server) simulateOK(c *fiber.Ctx) error {
 	return c.SendStatus(http.StatusOK)
 }
 
+func (handler *Server) simulateSlowOK(c *fiber.Ctx) error {
+	_, span := handler.tracer.Start(c.Context(), "api.http.handlers.simulate_ok")
+	defer span.End()
+
+	waitTime := time.Second * time.Duration(rand.Intn(2))
+	time.Sleep(waitTime) // waits waitTime seconds
+
+	return c.SendStatus(http.StatusOK)
+}
+
 func (handler *Server) simulateError(c *fiber.Ctx) error {
 	_, span := handler.tracer.Start(c.Context(), "api.http.handlers.simulate_error")
 	defer span.End()
