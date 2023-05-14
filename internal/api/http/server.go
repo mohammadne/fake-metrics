@@ -19,7 +19,7 @@ type Server struct {
 	app     *fiber.App
 }
 
-func New(cfg *Config, log *zap.Logger, tracer trace.Tracer) *Server {
+func NewServer(cfg *Config, log *zap.Logger, tracer trace.Tracer) *Server {
 	server := &Server{config: cfg, logger: log, metrics: newMetrics(), tracer: tracer}
 
 	server.app = fiber.New(fiber.Config{JSONEncoder: json.Marshal, JSONDecoder: json.Unmarshal})

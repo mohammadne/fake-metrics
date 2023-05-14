@@ -22,7 +22,7 @@ func Default() *Config {
 			},
 		},
 		HTTP: &http.Config{
-			Address: "localhost",
+			Address: "http://localhost",
 			Port:    8080,
 		},
 	}

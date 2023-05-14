@@ -29,7 +29,7 @@ func (cmd *Server) main(cfg *config.Config, trap chan os.Signal) {
 	logger := logger.New(cfg.Logger)
 	tracer := tracing.New(cfg.Tracing)
 
-	server := http.New(cfg.HTTP, logger, tracer)
+	server := http.NewServer(cfg.HTTP, logger, tracer)
 	go server.Serve()
 
 	// Keep this at the bottom of the main function
