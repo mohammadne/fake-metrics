@@ -7,41 +7,31 @@ import (
 	"github.com/gofiber/adaptor/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 )
 
 type Server struct {
 	config  *Config
 	logger  *zap.Logger
-	metrics Metrics
+	metrics *metrics
+	tracer  trace.Tracer
 	app     *fiber.App
 }
 
-func New(cfg *Config, log *zap.Logger) *Server {
-	server := &Server{config: cfg, logger: log}
-
-	server.metrics = newMetrics()
+func New(cfg *Config, log *zap.Logger, tracer trace.Tracer) *Server {
+	server := &Server{config: cfg, logger: log, metrics: newMetrics(), tracer: tracer}
 
 	server.app = fiber.New(fiber.Config{JSONEncoder: json.Marshal, JSONDecoder: json.Unmarshal})
+	server.app.Use(server.sharedMetrics)
 
 	server.app.Get("/metrics", adaptor.HTTPHandler(promhttp.Handler()))
 	server.app.Get("/healthz/liveness", server.liveness)
 	server.app.Get("/healthz/readiness", server.readiness)
 
-	server.app.Get("/ok", server.ok)
-
-	// v1 := server.app.Group("api/v1")
-
-	// auth := v1.Group("auth")
-	// auth.Post("/register", server.register)
-	// auth.Post("/login", server.login)
-
-	// contacts := v1.Group("contacts", server.fetchUserId)
-	// contacts.Get("/", server.getContacts)
-	// contacts.Post("/", server.createContact)
-	// contacts.Get("/:id", server.getContact)
-	// contacts.Put("/:id", server.updateContact)
-	// contacts.Delete("/:id", server.deleteContact)
+	server.app.Get("/ok", server.simulateOK)
+	server.app.Get("/error", server.simulateError)
+	server.app.Get("/random", server.random)
 
 	return server
 }
