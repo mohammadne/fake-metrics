@@ -1,4 +1,4 @@
-module github.com/MohammadNE/fake-metrics
+module github.com/mohammadne/fake-metrics
 
 go 1.20
 

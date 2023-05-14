@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/MohammadNE/fake-metrics/cmd"
+	"github.com/mohammadne/fake-metrics/cmd"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )

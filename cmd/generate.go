@@ -3,8 +3,8 @@ package cmd
 import (
 	"os"
 
-	"github.com/MohammadNE/fake-metrics/internal/config"
-	"github.com/MohammadNE/fake-metrics/pkg/logger"
+	"github.com/mohammadne/fake-metrics/internal/config"
+	"github.com/mohammadne/fake-metrics/pkg/logger"
 	"github.com/spf13/cobra"
 )
 

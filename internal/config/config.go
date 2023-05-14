@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/MohammadNE/fake-metrics/internal/api/http"
-	"github.com/MohammadNE/fake-metrics/pkg/logger"
+	"github.com/mohammadne/fake-metrics/internal/api/http"
+	"github.com/mohammadne/fake-metrics/pkg/logger"
 )
 
 type Config struct {
