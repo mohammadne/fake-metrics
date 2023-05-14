@@ -5,9 +5,9 @@ import (
 )
 
 type metrics struct {
-	TotalRequests      *prometheus.CounterVec
-	RequestsInProgress *prometheus.GaugeVec
-	RequestsDuration   *prometheus.HistogramVec
+	requestsTotal      *prometheus.CounterVec
+	requestsInProgress *prometheus.GaugeVec
+	requestsDuration   *prometheus.HistogramVec
 }
 
 func newMetrics() *metrics {
@@ -77,8 +77,8 @@ func newMetrics() *metrics {
 	prometheus.MustRegister(requestsDuration)
 
 	return &metrics{
-		TotalRequests:      totalRequests,
-		RequestsInProgress: requestsInProgress,
-		RequestsDuration:   requestsDuration,
+		requestsTotal:      totalRequests,
+		requestsInProgress: requestsInProgress,
+		requestsDuration:   requestsDuration,
 	}
 }

@@ -10,15 +10,15 @@ import (
 func (handler *Server) sharedMetrics(c *fiber.Ctx) error {
 	start := time.Now()
 	method := c.Route().Method
-	path := c.Route().Path
+	path := string(c.Request().URI().Path())
 
 	if path == "/metrics" {
 		return c.Next()
 	}
 
-	handler.metrics.RequestsInProgress.WithLabelValues(method, path).Inc()
+	handler.metrics.requestsInProgress.WithLabelValues(method, path).Inc()
 	defer func() {
-		handler.metrics.RequestsInProgress.WithLabelValues(method, path).Dec()
+		handler.metrics.requestsInProgress.WithLabelValues(method, path).Dec()
 	}()
 
 	status := fiber.StatusInternalServerError
@@ -33,10 +33,10 @@ func (handler *Server) sharedMetrics(c *fiber.Ctx) error {
 	}
 
 	statusCode := strconv.Itoa(status)
-	handler.metrics.RequestsInProgress.WithLabelValues(statusCode, method, path).Inc()
+	handler.metrics.requestsTotal.WithLabelValues(statusCode, method, path).Inc()
 
 	elapsed := float64(time.Since(start).Nanoseconds()) / 1e9
-	handler.metrics.RequestsDuration.WithLabelValues(statusCode, method, path).Observe(elapsed)
+	handler.metrics.requestsDuration.WithLabelValues(statusCode, method, path).Observe(elapsed)
 
 	return err
 }
