@@ -32,7 +32,7 @@ func (handler *Server) simulateSlowOK(c *fiber.Ctx) error {
 	_, span := handler.tracer.Start(c.Context(), "api.http.handlers.simulate_ok")
 	defer span.End()
 
-	waitTime := time.Second * time.Duration(rand.Intn(2))
+	waitTime := time.Second * time.Duration(rand.Intn(10))
 	time.Sleep(waitTime) // waits waitTime seconds
 
 	return c.SendStatus(http.StatusOK)
@@ -42,7 +42,19 @@ func (handler *Server) simulateError(c *fiber.Ctx) error {
 	_, span := handler.tracer.Start(c.Context(), "api.http.handlers.simulate_error")
 	defer span.End()
 
-	err := errors.New("")
+	err := errors.New("simulate error")
+	span.RecordError(err)
+	return c.SendStatus(http.StatusForbidden)
+}
+
+func (handler *Server) simulateSlowError(c *fiber.Ctx) error {
+	_, span := handler.tracer.Start(c.Context(), "api.http.handlers.simulate_error")
+	defer span.End()
+
+	waitTime := time.Second * time.Duration(rand.Intn(10))
+	time.Sleep(waitTime) // waits waitTime seconds
+
+	err := errors.New("simulate slow error")
 	span.RecordError(err)
 	return c.SendStatus(http.StatusForbidden)
 }

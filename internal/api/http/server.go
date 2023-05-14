@@ -32,6 +32,7 @@ func New(cfg *Config, log *zap.Logger, tracer trace.Tracer) *Server {
 	server.app.Get("/ok", server.simulateOK)
 	server.app.Get("/slow-ok", server.simulateSlowOK)
 	server.app.Get("/error", server.simulateError)
+	server.app.Get("/slow-error", server.simulateSlowError)
 	server.app.Get("/random", server.random)
 
 	return server
